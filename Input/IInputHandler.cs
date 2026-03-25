@@ -9,14 +9,14 @@ namespace MazeGame.Input
     // interfejs dla handlerów wejścia
     public interface IInputHandler
     {
-        IInputHandler SetNext(IInputHandler handler);
-        bool Handle(ConsoleKey key);
+        IInputHandler SetNext(IInputHandler handler); // podpina kolejny element łańcucha, zwraca ten element
+        bool Handle(ConsoleKey key); // prónuje obsłużyć klawisz, zwraca true jeśli obsłużył, false jeśli nie
     }
 
     // abstrakcyjna klasa bazowa, która implementuje chain of responsibility
     public abstract class BaseInputHandler : IInputHandler
     {
-        // referencja do następnego handlera w łańcuchu
+        // przechowuje informację o następnym handlerze w łańcuchu
         private IInputHandler _nextHandler;
 
         // metoda do ustawiania następnego handlera

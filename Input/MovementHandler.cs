@@ -8,6 +8,7 @@ using MazeGame.World;
 
 namespace MazeGame.Input
 {
+    // zajmuje się poruszaniem postacią gracza po mapie
     public class MovementHandler : BaseInputHandler
     {
         private Player _player;
@@ -25,12 +26,11 @@ namespace MazeGame.Input
             };
         }
 
-        // Metoda Handle sprawdza, czy wciśnięty klawisz jest jednym z tych, które obsługujemy
+        // metoda sprawdza, czy klawisz jest w słowniku i jeśli tak, wykonuje odpowiadające mu polecenie ruchu. Jeśli klawisz nie jest obsługiwany, przekazuje go dalej
         public override bool Handle(ConsoleKey key)
         {
             if (_keyBindings.TryGetValue(key, out ICommand command))
             {
-                // Jeśli tak, po prostu wykonujemy przypisane mu polecenie!
                 command.Execute();
                 return true;
             }

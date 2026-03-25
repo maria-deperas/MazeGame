@@ -57,7 +57,6 @@ namespace MazeGame.World
         {
             if (!_instructions.Contains("MAP STRUCTURE:"))
             {
-                _instructions.Add(""); // pusta linia dla odstępu
                 _instructions.Add("MAP STRUCTURE:");
             }
         }
@@ -98,7 +97,7 @@ namespace MazeGame.World
             // Możliwe kierunki ruchu (skok o 2, bo między nimi jest ściana)
             (int dx, int dy)[] directions = { (0, -2), (2, 0), (0, 2), (-2, 0) };
 
-            // Funkcja do dodawania nowyc
+            // Funkcja do dodawania nowych możliwych kroków do listy
             void AddPossibleSteps(int x, int y)
             {
                 foreach (var dir in directions)

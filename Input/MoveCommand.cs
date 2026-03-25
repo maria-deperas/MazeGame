@@ -8,6 +8,7 @@ using MazeGame.World;
 
 namespace MazeGame.Input
 {
+    // klasa reprezentująca polecenie ruchu gracza
     public class MoveCommand : ICommand
     {
         private Player _player;
