@@ -25,8 +25,26 @@ namespace MazeGame.UI
             string leftItem = player.LeftHand != null ? player.LeftHand.Name : "Empty";
 
             // Wyświetlanie przedmiotów w rękach gracza
-            lines.Add($" R. Hand:  {rightItem}".PadRight(w));
-            lines.Add($" L. Hand:  {leftItem}".PadRight(w));
+            string left;
+            if (player.LeftHand != null)
+                left = player.LeftHand.GetInfo();
+            else
+                left = "[ Empty ]";
+
+            string right;
+            if (player.RightHand != null)
+                right = player.RightHand.GetInfo();
+            else
+                right = "[ Empty ]";
+
+            if (player.RightHand != null && player.RightHand.IsTwoHanded)
+                left = right;
+
+            if (player.LeftHand != null && player.LeftHand.IsTwoHanded)
+                right = left;
+
+            lines.Add($"Left Hand: {left}".PadRight(w));
+            lines.Add($"Right Hand: {right}".PadRight(w));
 
             lines.Add(MakeHeader("ON GROUND"));
             for (int i = 0; i < Constants.MaxItemsPerCell; i++)
