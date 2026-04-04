@@ -8,7 +8,7 @@ using MazeGame.Characters;
 using MazeGame.Core;
 using MazeGame.World;
 using Pastel;
-
+/*
 namespace MazeGame.UI
 {
     public class Printing
@@ -89,4 +89,4 @@ namespace MazeGame.UI
             Console.ReadKey(true);
         }
     }
-}
+}*/

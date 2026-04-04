@@ -18,15 +18,12 @@ namespace MazeGame.Core
         public const char EmptySymbol = ' ';
 
         // Pojemność plecaka i ilość przedmiotów na ziemi
-        public const int BackpackCapacity = 3;
-        public const int MaxItemsPerCell = 4;
+        public const int BackpackCapacity = 5;
+        public const int MaxItemsPerCell = 8;
 
-        // Ustawienia wyświetlania
-        public const int StatColumnWidth = 35;       // Szerokość kolumny statystyk
-        public const int ActionColumnWidth = 35;     // Szerokość kolumny dostępnych akcji
-        public const int EmptySidebarWidth = 75;     // Szerokość pustego pola zamazującego "duchy"
-        public const int MenuSeparatorLength = 25;   // Długość kresek oddzielających w menu
-        public const int BottomClearLines = 3;       // Ile pustych linii rysować pod mapą
-        public const int BottomClearWidth = 80;      // Szerokość linii zamazującej komunikaty
+        // Fragment do dodania/zmiany w Constants.cs
+        public const int LeftPanelWidth = 20;  // Dużo miejsca na długie nazwy przedmiotów!
+        public const int RightPanelWidth = 50; // Miejsce na statystyki i akcje
+        public const int PanelHeight = MazeHeight + 2; // Panele będą tej samej wysokości co mapa
     }
 }

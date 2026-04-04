@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MazeGame.Items.Weapons;
+using MazeGame.Items.Unusables;
+using MazeGame.Items.Currency;
+using MazeGame.Items.Weapons.Decorators;
 
 namespace MazeGame.Items
 {
@@ -21,11 +25,12 @@ namespace MazeGame.Items
         };
 
         // lista generatorów broni
-        private List<Func<Item>> _weaponGenerators = new List<Func<Item>>()
+        private List<Func<Weapon>> _weaponGenerators = new List<Func<Weapon>>()
         {
             () => new Dagger(),
             () => new Saber(),
-            () => new Sword()
+            () => new Sword(),
+            () => new MagicWand()
         };
 
         // metoda zwracająca losowy nieużywalny przedmiot
@@ -39,7 +44,20 @@ namespace MazeGame.Items
         public Item GetRandomWeapon()
         {
             int index = rng.Next(_weaponGenerators.Count);
-            return _weaponGenerators[index]();
+
+            Weapon weapon = _weaponGenerators[index]();
+
+            if (rng.Next(100) < 30) 
+            {
+                weapon = new StrongDecorator(weapon);
+            }
+
+            if (rng.Next(100) < 30)
+            {
+                weapon = new UnluckyDecorator(weapon);
+            }
+
+            return weapon;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MazeGame.Characters;
 using MazeGame.Core;
 using MazeGame.World;
-
+/*
 namespace MazeGame.UI
 {
     public class Statistics
@@ -103,4 +103,4 @@ namespace MazeGame.UI
             return new string('─', leftPad) + paddedTitle + new string('─', rightPad);
         }
     }
-}
+}*/
