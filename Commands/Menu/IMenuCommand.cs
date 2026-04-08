@@ -9,7 +9,7 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public interface IMenuAction
+    public interface IMenuCommand
     {
         string Description { get; }
 

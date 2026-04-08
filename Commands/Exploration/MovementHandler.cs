@@ -38,7 +38,7 @@ namespace MazeGame.Commands.Exploration
 
             return base.Handle(key);
         }
-        // meto
+        
         public override List<string> GetGuiInstructions()
         {
             var keys = string.Join("/", _keyBindings.Keys);

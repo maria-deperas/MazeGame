@@ -16,11 +16,5 @@ namespace MazeGame.Items.Weapons
             Symbol = 'i';
             Damage = 15;
         }
-
-        public override int AcceptDamage(ICombatVisitor visitor, int currentDamage, Attributes stats)
-            => visitor.CalculateDamageMagic(currentDamage, stats);
-
-        public override int AcceptDefense(ICombatVisitor visitor, Attributes stats)
-            => visitor.CalculateDefenseMagic(stats);
     }
 }

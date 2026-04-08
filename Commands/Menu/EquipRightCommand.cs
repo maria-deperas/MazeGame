@@ -6,7 +6,7 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public class EquipRightAction : IMenuAction
+    public class EquipRightCommand : IMenuCommand
     {
         public string Description => "Equip to Right Hand";
         public void Execute(MenuManager menu, Player player, Map map, Action<string> showMessage)

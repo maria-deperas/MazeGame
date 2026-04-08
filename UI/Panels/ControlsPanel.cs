@@ -10,9 +10,8 @@ namespace MazeGame.UI.Panels
         private readonly MenuManager _menu;
         private readonly IInputHandler _inputChain;
 
-        // UWAGA: Konstruktor przyjmuje teraz łańcuch IInputHandler!
         public ControlsPanel(MenuManager menu, IInputHandler inputChain)
-            : base(Constants.LeftPanelWidth, 10, "CONTROLS")
+            : base(Constants.LeftPanelWidth, 8, "CONTROLS")
         {
             _menu = menu;
             _inputChain = inputChain;
@@ -24,7 +23,6 @@ namespace MazeGame.UI.Panels
 
             if (_menu.CurrentMenu == MenuMode.None)
             {
-                // 1. TRYB GRY: Pobieranie z Chain of Responsibility
                 var current = _inputChain;
                 while (current != null)
                 {
@@ -34,11 +32,9 @@ namespace MazeGame.UI.Panels
             }
             else
             {
-                // 2. TRYB MENU (Ground / Backpack): Pobieranie prosto ze słowników MenuManagera!
                 var activeActions = _menu.GetActiveMenuInfo();
                 foreach (var action in activeActions)
                 {
-                    // Możemy ładnie sformatować strzałki, żeby nie wyświetlało się "UpArrow"
                     string keyName = action.Key;
                     if (keyName == "UpArrow") keyName = "↑";
                     if (keyName == "DownArrow") keyName = "↓";

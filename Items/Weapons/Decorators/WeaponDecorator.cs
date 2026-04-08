@@ -9,18 +9,15 @@ using MazeGame.Characters.Combat;
 
 namespace MazeGame.Items.Weapons.Decorators
 {
+    // Abstrakcyjna klasa dekoratora dla broni, implementująca wzorzec dekoratora
     public abstract class WeaponDecorator : Weapon
     {
-        // To jest nasz "schowany" rdzeń (np. zwykły miecz)
         protected Weapon _wrappedWeapon;
 
         public WeaponDecorator(Weapon weaponToWrap)
         {
             _wrappedWeapon = weaponToWrap;
         }
-
-        // --- DELEGOWANIE WŁAŚCIWOŚCI ---
-        // Zamiast podawać własne wartości, dekorator pyta o nie opakowaną broń
         public override string Name
         {
             get => _wrappedWeapon.Name;

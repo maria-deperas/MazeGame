@@ -5,15 +5,15 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public class UnequipLeftAction : IMenuAction
+    public class UnequipRightCommand : IMenuCommand
     {
-        public string Description => "Unequip Left Hand";
+        public string Description => "Unequip Right Hand";
 
         public void Execute(MenuManager menu, Player player, Map map, Action<string> showMessage)
         {
-            if (player.LeftHand != null)
+            if (player.RightHand != null)
             {
-                if (!player.LeftHand.RemoveFromLeft(player))
+                if (!player.RightHand.RemoveFromRight(player))
                 {
                     showMessage("Not enough space in backpack!");
                 }
@@ -25,7 +25,7 @@ namespace MazeGame.Commands.Menu
             }
             else
             {
-                showMessage("Left hand is already empty!");
+                showMessage("Right hand is already empty!");
             }
         }
     }

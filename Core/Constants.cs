@@ -18,12 +18,11 @@ namespace MazeGame.Core
         public const char EmptySymbol = ' ';
 
         // Pojemność plecaka i ilość przedmiotów na ziemi
-        public const int BackpackCapacity = 5;
-        public const int MaxItemsPerCell = 8;
+        public const int BackpackCapacity = 4;
+        public const int MaxItemsPerCell = 4;
 
-        // Fragment do dodania/zmiany w Constants.cs
-        public const int LeftPanelWidth = 20;  // Dużo miejsca na długie nazwy przedmiotów!
-        public const int RightPanelWidth = 50; // Miejsce na statystyki i akcje
-        public const int PanelHeight = MazeHeight + 2; // Panele będą tej samej wysokości co mapa
+        public const int LeftPanelWidth = 20;
+        public const int RightPanelWidth = 50; 
+        public const int PanelHeight = MazeHeight + 2;
     }
 }

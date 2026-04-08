@@ -6,7 +6,7 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public class PickUpGroundItemAction : IMenuAction
+    public class PickUpGroundItemCommand : IMenuCommand
     {
         public string Description => "Pick up";
         public void Execute(MenuManager menu, Player player, Map map, Action<string> showMessage)

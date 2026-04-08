@@ -3,6 +3,7 @@ using Pastel;
 
 namespace MazeGame.Characters
 {
+    // Przeciwnik
     public class Enemy
     {
         public string Name { get; set; }

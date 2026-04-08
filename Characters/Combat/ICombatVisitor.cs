@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace MazeGame.Characters.Combat
 {
+    // Interfejs dla wzorca Visitor
+    // definiuje metody do obliczania obrażeń i obrony dla różnych typów ataków i obrony
     public interface ICombatVisitor
     {
         string AttackName { get; }
         int CalculateDamageHeavy(int weaponDamage, Attributes stats);
         int CalculateDamageLight(int weaponDamage, Attributes stats);
         int CalculateDamageMagic(int weaponDamage, Attributes stats);
-        int CalculateDamageNonWeapon();
+        int CalculateDamageNonWeapon(); 
 
         int CalculateDefenseHeavy(Attributes stats);
         int CalculateDefenseLight(Attributes stats);

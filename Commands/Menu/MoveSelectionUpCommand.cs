@@ -9,7 +9,7 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public class MoveSelectionUpAction : IMenuAction
+    public class MoveSelectionUpCommand : IMenuCommand
     {
         public string Description => "Select Up";
         public void Execute(MenuManager menu, Player player, Map map, Action<string> showMessage)

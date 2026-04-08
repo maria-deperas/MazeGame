@@ -9,7 +9,7 @@ using MazeGame.Items;
 
 namespace MazeGame.World.Generation
 {
-    // Builder mapy, który tworzy standardowy, klasyczny układ lochu: centralny pokój, korytarze i kilka mniejszych pomieszczeń.
+    // Builder mapy
     public class StandardMapBuilder : IMapBuilder
     {
         private Cell[,] _cells;
@@ -214,12 +214,12 @@ namespace MazeGame.World.Generation
             return this;
         }
 
+        // Metoda do losowego rozmieszczania wrogów na mapie, z losowymi statystykami i nazwami
         public IMapBuilder AddEnemies(int count)
         {
             CheckInitialized();
             int placed = 0;
 
-            // Proste nazwy potworów do losowania
             string[] names = { "Goblin", "Orc", "Skeleton", "Zombie" };
 
             while (placed < count)
@@ -227,7 +227,7 @@ namespace MazeGame.World.Generation
                 int rx = _rnd.Next(Constants.MazeWidth);
                 int ry = _rnd.Next(Constants.MazeHeight);
 
-                // Nie stawiamy wroga w ścianie i upewniamy się, że nie ma tam już innego wroga
+                // Sprawdzamy, czy komórka nie jest ścianą i czy nie ma już wroga, zanim umieścimy nowego wroga
                 if (!_cells[ry, rx].IsWall && _cells[ry, rx].Enemy == null)
                 {
                     string name = names[_rnd.Next(names.Length)];
@@ -235,10 +235,7 @@ namespace MazeGame.World.Generation
                     int attack = _rnd.Next(5, 16);
                     int armor = _rnd.Next(0, 6);
 
-                    // Najpierw tworzymy obiekt statystyk...
                     EnemyStats stats = new EnemyStats(hp, attack, armor);
-
-                    // ...a potem przekazujemy go do wroga!
                     _cells[ry, rx].Enemy = new Enemy(name, stats);
                     placed++;
                 }
@@ -253,7 +250,7 @@ namespace MazeGame.World.Generation
             return this;
         }
 
-        // Uniwersalna metoda do losowego rozmieszczania przedmiotów na mapie, przyjmuje generator przedmiotów i liczbę do umieszczenia
+        // Metoda do losowego rozmieszczania przedmiotów na mapie
         private void PlaceRandomly(Func<Item> itemGenerator, int count)
         {
             int placed = 0;

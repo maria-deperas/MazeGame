@@ -22,10 +22,8 @@ namespace MazeGame.UI.Panels
         {
             List<string> lines = new List<string>();
 
-            // Górna ramka mapy
             lines.Add("┌" + new string('─', Constants.MazeWidth) + "┐");
 
-            // Rysowanie wierszy mapy
             for (int y = 0; y < Constants.MazeHeight; y++)
             {
                 string row = "│";
@@ -33,12 +31,10 @@ namespace MazeGame.UI.Panels
                 {
                     if (x == _player.X && y == _player.Y)
                     {
-                        // Kolorowanie gracza na czerwono
                         row += Constants.PlayerSymbol.ToString().Pastel(Color.Red);
                     }
                     else
                     {
-                        // Pobieranie symbolu z komórki mapy
                         row += _map.GetCell(x, y).GetSymbol();
                     }
                 }
@@ -46,7 +42,6 @@ namespace MazeGame.UI.Panels
                 lines.Add(row);
             }
 
-            // Dolna ramka mapy
             lines.Add("└" + new string('─', Constants.MazeWidth) + "┘");
 
             return lines;

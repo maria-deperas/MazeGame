@@ -10,25 +10,18 @@ namespace MazeGame.Items.Weapons.Decorators
     public class UnluckyDecorator : WeaponDecorator
     {
         public UnluckyDecorator(Weapon weaponToWrap) : base(weaponToWrap) { }
-
-        // Modyfikujemy nazwę!
         public override string Name => $"{_wrappedWeapon.Name} (Unlucky)";
 
-        // Podpinamy się pod moment wzięcia broni do prawej ręki
         public override bool AddToRight(Player player)
         {
-            // Najpierw próbujemy wziąć broń normalnie (delegacja)
             bool success = base.AddToRight(player);
 
-            // Jeśli się udało, zabieramy 5 szczęścia
             if (success)
             {
                 player.Stats.Luck -= 5;
             }
             return success;
         }
-
-        // Podpinamy się pod moment wzięcia broni do lewej ręki
         public override bool AddToLeft(Player player)
         {
             bool success = base.AddToLeft(player);
@@ -38,6 +31,26 @@ namespace MazeGame.Items.Weapons.Decorators
             }
             return success;
         }
+
+        public override bool RemoveFromRight(Player player)
+        {
+            bool success = base.RemoveFromRight(player);
+            if (success)
+            {
+                player.Stats.Luck += 5;
+            }
+            return success;
+        }
+        public override bool RemoveFromLeft(Player player)
+        {
+            bool success = base.RemoveFromLeft(player);
+            if (success)
+            {
+                player.Stats.Luck += 5;
+            }
+            return success;
+        }
+
 
         public override string GetInfo()
         {

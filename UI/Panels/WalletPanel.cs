@@ -7,7 +7,7 @@ namespace MazeGame.UI.Panels
     public class WalletPanel : FramedPanel
     {
         private readonly Player _player;
-        public WalletPanel(Player player) : base(Constants.LeftPanelWidth, 2, "POUCH")
+        public WalletPanel(Player player) : base(Constants.LeftPanelWidth, 2, "WALLET")
         { _player = player; }
 
         protected override List<string> GetContentLines() => new List<string>

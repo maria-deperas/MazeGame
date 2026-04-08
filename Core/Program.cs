@@ -52,14 +52,16 @@ public class Program
             attrPanel, walletPanel, controlsPanel
         );
 
+        // Prawa kolumna
         var equipPanel = new EquippedPanel(player);
         var groundPanel = new GroundItemsPanel(map, player, menuManager);
         var backpackPanel = new BackpackPanel(player, menuManager);
+        var combatPanel = new CombatPanel(menuManager);
 
         var rightColumn = new VerticalStackPanel(
             Constants.RightPanelWidth,
             Constants.PanelHeight,
-            equipPanel, groundPanel, backpackPanel
+            equipPanel, groundPanel, backpackPanel, combatPanel
         );
 
         var mapRenderer = new MapRenderer(map, player);
@@ -79,6 +81,12 @@ public class Program
                 {
                     screenRenderer.ShowMessage("Unknown key!");
                 }
+            }
+
+            if (player.Stats.Health <= 0)
+            {
+                GameOverScreen.Show();
+                break;
             }
         }
     }

@@ -6,11 +6,15 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public class DropItemCommand : IMenuAction
+    public class DropItemCommand : IMenuCommand
     {
         public string Description => "Drop item";
         public void Execute(MenuManager menu, Player player, Map map, Action<string> showMessage)
         {
+            if (menu.SelectionIndex < 0 || menu.SelectionIndex >= player.Backpack.Count)
+            {
+                return;
+            }
             Item selected = player.Backpack[menu.SelectionIndex];
             int cnt = player.Backpack.Count;
 

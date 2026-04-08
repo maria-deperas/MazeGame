@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MazeGame.Items.Weapons.Decorators
 {
+    // Dekorator dla broni silnej
     public class StrongDecorator : WeaponDecorator
     {
         public StrongDecorator(Weapon weaponToWrap) : base(weaponToWrap) { }

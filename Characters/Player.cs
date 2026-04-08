@@ -23,7 +23,7 @@ namespace MazeGame.Characters
         {
             X = startx;
             Y = starty;
-            Stats = new Attributes(10, 10, 10, 10, 10, 10);
+            Stats = new Attributes(10, 10, 50, 10, 10, 10);
         }
 
         // metoda sprawdzająca pozycję gracza po wciśnięciu klawisz

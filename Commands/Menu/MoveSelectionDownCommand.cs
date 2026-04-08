@@ -5,7 +5,7 @@ using MazeGame.World;
 
 namespace MazeGame.Commands.Menu
 {
-    public class MoveSelectionDownAction : IMenuAction
+    public class MoveSelectionDownCommand : IMenuCommand
     {
         public string Description => "Select Down";
         public void Execute(MenuManager menu, Player player, Map map, Action<string> showMessage)

@@ -6,7 +6,7 @@ namespace MazeGame.UI.Panels
     {
         private readonly List<IRenderable> _panels;
         private readonly int _width;
-        private readonly int _targetHeight; // Np. wysokość mapy + 2 na ramki
+        private readonly int _targetHeight;
 
         public VerticalStackPanel(int width, int targetHeight, params IRenderable[] panels)
         {

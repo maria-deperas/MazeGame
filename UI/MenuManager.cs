@@ -16,35 +16,35 @@ namespace MazeGame.UI
         public Enemy ActiveEnemy { get; private set; }
         public Cell ActiveCell { get; private set; }
 
-        // Słowniki zastępujące instrukcje switch!
-        private readonly Dictionary<ConsoleKey, IMenuAction> _groundActions;
-        private readonly Dictionary<ConsoleKey, IMenuAction> _backpackActions;
-        private readonly Dictionary<ConsoleKey, IMenuAction> _combatActions;
+        private readonly Dictionary<ConsoleKey, IMenuCommand> _groundActions;
+        private readonly Dictionary<ConsoleKey, IMenuCommand> _backpackActions;
+        private readonly Dictionary<ConsoleKey, IMenuCommand> _combatActions;
 
         public MenuManager()
         {
-            // Rejestrujemy akcje dla menu na ziemi
-            _groundActions = new Dictionary<ConsoleKey, IMenuAction>
+            // Akcje dla mapy
+            _groundActions = new Dictionary<ConsoleKey, IMenuCommand>
             {
-                { ConsoleKey.UpArrow, new MoveSelectionUpAction() },
-                { ConsoleKey.DownArrow, new MoveSelectionDownAction() },
-                { ConsoleKey.Enter, new PickUpGroundItemAction() },
+                { ConsoleKey.UpArrow, new MoveSelectionUpCommand() },
+                { ConsoleKey.DownArrow, new MoveSelectionDownCommand() },
+                { ConsoleKey.Enter, new PickUpGroundItemCommand() },
                 { ConsoleKey.Escape, new CloseMenuCommand() }
             };
 
-            // Rejestrujemy akcje dla menu plecaka
-            _backpackActions = new Dictionary<ConsoleKey, IMenuAction>
+            // Akcje dla plecaka
+            _backpackActions = new Dictionary<ConsoleKey, IMenuCommand>
             {
-                { ConsoleKey.UpArrow, new MoveSelectionUpAction() },
-                { ConsoleKey.DownArrow, new MoveSelectionDownAction() },
+                { ConsoleKey.UpArrow, new MoveSelectionUpCommand() },
+                { ConsoleKey.DownArrow, new MoveSelectionDownCommand() },
                 { ConsoleKey.L, new EquipLeftCommand() },
-                { ConsoleKey.R, new EquipRightAction() },
-                { ConsoleKey.D1, new UnequipLeftAction() },
-                { ConsoleKey.D2, new UnequipRightAction() },
+                { ConsoleKey.R, new EquipRightCommand() },
+                { ConsoleKey.D1, new UnequipLeftCommand() },
+                { ConsoleKey.D2, new UnequipRightCommand() },
                 { ConsoleKey.D, new DropItemCommand() },
                 { ConsoleKey.Escape, new CloseMenuCommand() }
             };
-            _combatActions = new Dictionary<ConsoleKey, IMenuAction>
+            // Akcje dla walki
+            _combatActions = new Dictionary<ConsoleKey, IMenuCommand>
             {
                 { ConsoleKey.D1, new NormalAttackCommand() },
                 { ConsoleKey.D2, new StealthAttackCommand() },
@@ -84,7 +84,7 @@ namespace MazeGame.UI
             ActiveCell = cell;
             CurrentMenu = MenuMode.Combat;
             SelectionIndex = -1;
-            showMessage($"Combat! {enemy.Name} (HP: {enemy.Stats.CurrentHealth}). Choose attack: [1] Normal, [2] Stealth, [3] Magic");
+            showMessage($"Combat! {enemy.Name} (HP: {enemy.Stats.CurrentHealth})");
         }
 
         public void HandleMenuInput(Player player, Map map, ConsoleKey key, Action<string> showMessage)
@@ -98,7 +98,7 @@ namespace MazeGame.UI
                     return;
                 }
 
-                if (_groundActions.TryGetValue(key, out IMenuAction action))
+                if (_groundActions.TryGetValue(key, out IMenuCommand action))
                 {
                     action.Execute(this, player, map, showMessage);
                 }
@@ -107,17 +107,15 @@ namespace MazeGame.UI
             {
                 int cnt = player.Backpack.Count;
 
-                // ZMIANA 1: Zamykamy plecak tylko, gdy CAŁKOWICIE nie ma nic do zarządzania
                 if (cnt == 0 && player.LeftHand == null && player.RightHand == null)
                 {
                     CloseMenu();
                     return;
                 }
 
-                // ZMIANA 2: Zabezpieczenie kursora, gdy plecak jest pusty
                 if (cnt == 0)
                 {
-                    SelectionIndex = -1; // Ukrywamy kursor, bo nie ma na czym go pokazać
+                    SelectionIndex = -1;
                 }
                 else if (SelectionIndex >= cnt)
                 {
@@ -125,18 +123,17 @@ namespace MazeGame.UI
                 }
                 else if (SelectionIndex < 0 && cnt > 0)
                 {
-                    SelectionIndex = 0; // Ustawiamy na 1. element, jeśli coś się pojawiło
+                    SelectionIndex = 0;
                 }
 
-                // Uruchamiamy akcję (teraz wciśnięcie klawisza 1 w końcu tu dotrze!)
-                if (_backpackActions.TryGetValue(key, out IMenuAction action))
+                if (_backpackActions.TryGetValue(key, out IMenuCommand action))
                 {
                     action.Execute(this, player, map, showMessage);
                 }
             }
             else if (CurrentMenu == MenuMode.Combat)
             {
-                if (_combatActions.TryGetValue(key, out IMenuAction action))
+                if (_combatActions.TryGetValue(key, out IMenuCommand action))
                 {
                     action.Execute(this, player, map, showMessage);
                 }
@@ -155,11 +152,20 @@ namespace MazeGame.UI
         {
             SelectionIndex = (SelectionIndex + step + itemCount) % itemCount;
         }
-
         public void EnsureValidSelectionIndex(int itemCount)
         {
-            if (SelectionIndex >= itemCount)
-                SelectionIndex = Math.Max(0, itemCount - 1);
+            if (itemCount == 0)
+            {
+                SelectionIndex = -1;
+            }
+            else if (SelectionIndex >= itemCount)
+            {
+                SelectionIndex = itemCount - 1;
+            }
+            else if (SelectionIndex < 0 && itemCount > 0)
+            {
+                SelectionIndex = 0;
+            }
         }
 
         public List<(string Key, string Description)> GetActiveMenuInfo()

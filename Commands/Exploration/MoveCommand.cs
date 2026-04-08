@@ -37,17 +37,19 @@ namespace MazeGame.Commands.Exploration
         {
             var (nextX, nextY) = _player.GetNextPosition(_dx, _dy);
 
-            // Pobieramy komórkę, na którą gracz próbuje wejść
+            if (!_map.IsMovePossible(nextX, nextY))
+            {
+                return;
+            }
+
+            // Sprawdzamy, czy na docelowej komórce jest przeciwnik. Jeśli tak, otwieramy menu walki. Jeśli nie, wykonujemy ruch gracza.
             Cell targetCell = _map.GetCell(nextX, nextY);
 
-            // Krok 1: Sprawdzamy, czy na polu stoi przeciwnik
             if (targetCell.HasEnemy)
             {
-                // Zatrzymujemy ruch i otwieramy Menu Walki!
                 _menuManager.ToggleCombatMenu(_player, targetCell.Enemy, targetCell, _showMessage);
             }
-            // Krok 2: Jeśli nie ma przeciwnika, standardowo sprawdzamy czy można wejść (czy nie ma ściany)
-            else if (_map.IsMovePossible(nextX, nextY))
+            else
             {
                 _player.Move(nextX, nextY);
             }
