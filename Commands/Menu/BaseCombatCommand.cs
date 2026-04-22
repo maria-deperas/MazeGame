@@ -46,10 +46,9 @@ namespace MazeGame.Commands.Menu
             int actualDamageToEnemy = Math.Max(0, playerDamage - enemy.Stats.Armor);
             enemy.Stats.CurrentHealth -= actualDamageToEnemy;
 
-            // KRÓTKA WIADOMOŚĆ
             GameLog.GetInstance().Log($"Hit {enemy.Name} for {actualDamageToEnemy} dmg!");
 
-            // 2. Sprawdzamy czy przeciwnik zginął
+            // sprawdzamy czy przeciwnik zginął
             if (enemy.Stats.CurrentHealth <= 0)
             {
                 GameLog.GetInstance().Log($"{enemy.Name} died!");
@@ -58,14 +57,13 @@ namespace MazeGame.Commands.Menu
                 return;
             }
 
-            // 3. Kontratak przeciwnika
+            // kontratak przeciwnika
             int actualDamageToPlayer = Math.Max(0, enemy.Stats.Attack - playerDefense);
             player.Stats.Health -= actualDamageToPlayer;
 
-            // KRÓTKA WIADOMOŚĆ
             GameLog.GetInstance().Log($"{enemy.Name} counter-attacks for {actualDamageToPlayer} dmg!");
 
-            // 4. Śmierć gracza
+            // śmierć gracza
             if (player.Stats.Health <= 0)
             {
                 GameLog.GetInstance().Log("YOU DIED! GAME OVER.");
