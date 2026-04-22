@@ -16,8 +16,10 @@ namespace MazeGame.Items.Weapons
             return $"{Name} (Heavy Weapon, {grip}, DMG: {Damage})";
         }
 
-        public override int AcceptDamage(ICombatVisitor visitor, int currentDamage, Attributes stats)
-            => visitor.CalculateDamageHeavy(currentDamage, stats);
+        public override int AcceptDamage(ICombatVisitor visitor, Attributes stats)
+        {
+            return visitor.CalculateDamageHeavy(this.Damage, stats);
+        }
 
         public override int AcceptDefense(ICombatVisitor visitor, Attributes stats)
             => visitor.CalculateDefenseHeavy(stats);

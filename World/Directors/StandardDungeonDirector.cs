@@ -16,8 +16,8 @@ namespace MazeGame.World.Directors
                 .AddCorridors()
                 .AddCentralRoom(10, 4)
                 .AddRooms(6)
-                .AddRandomItems(20)
-                .AddRandomWeapons(30)
+                //.AddRandomItems(20)
+                //.AddRandomWeapons(30)
                 .AddEnemies(10)
                 .GetResult();
         }

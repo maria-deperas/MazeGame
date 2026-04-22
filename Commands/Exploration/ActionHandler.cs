@@ -17,7 +17,8 @@ namespace MazeGame.Commands.Exploration
             _keyBindings = new Dictionary<ConsoleKey, ICommand>
             {
                 { ConsoleKey.E, new OpenGroundMenuCommand(menuManager, player, map, showMessage) },
-                { ConsoleKey.B, new OpenBackpackCommand(menuManager, player) }
+                { ConsoleKey.B, new OpenBackpackCommand(menuManager, player) },
+                { ConsoleKey.J, new OpenLogCommand() }
             };
         }
 
@@ -40,8 +41,6 @@ namespace MazeGame.Commands.Exploration
 
             foreach (var binding in _keyBindings)
             {
-                // Polimorfizm! Pytamy komendę, czy chce być widoczna.
-                // Jeśli zmienisz ConsoleKey.E na H w konstruktorze, to tutaj 'binding.Key' samo przeczyta 'H'!
                 if (binding.Value.IsVisible)
                 {
                     instructions.Add($" [{binding.Key}] {binding.Value.Description}");

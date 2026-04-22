@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MazeGame.Core;
 using MazeGame.UI.Panels;
 
 namespace MazeGame.UI
@@ -14,11 +15,15 @@ namespace MazeGame.UI
             List<string> middleLines = middlePanel.Render();
             List<string> rightLines = rightPanel.Render();
 
-            int totalLines = Math.Max(leftLines.Count, rightLines.Count);
+            int totalLines = Math.Max(leftLines.Count, Math.Max(middleLines.Count, rightLines.Count));
 
             for (int i = 0; i < totalLines; i++)
             {
-                Console.WriteLine($"{leftLines[i]}  {middleLines[i]}  {rightLines[i]}");
+                string l = i < leftLines.Count ? leftLines[i] : new string(' ', Constants.LeftPanelWidth);
+                string m = i < middleLines.Count ? middleLines[i] : new string(' ', Constants.MazeWidth + 2);
+                string r = i < rightLines.Count ? rightLines[i] : "";
+
+                Console.WriteLine($"{l}  {m}  {r}");
             }
         }
 

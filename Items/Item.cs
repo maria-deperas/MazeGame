@@ -75,7 +75,7 @@ namespace MazeGame.Items
             return true;
         }
 
-        public virtual int AcceptDamage(ICombatVisitor visitor, int currentDamage, Attributes stats)
+        public virtual int AcceptDamage(ICombatVisitor visitor, Attributes stats)
         {
             return visitor.CalculateDamageNonWeapon();
         }

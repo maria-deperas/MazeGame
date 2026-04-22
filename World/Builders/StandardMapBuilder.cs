@@ -18,6 +18,9 @@ namespace MazeGame.World.Generation
 
         private List<string> _instructions = new List<string>();
 
+        private List<string> _enemyNames = new List<string> { "Default enemy" };
+        private List<Func<Item>> _itemPool = new List<Func<Item>>();
+
         // Metoda pomocnicza do sprawdzania, czy mapa została zainicjalizowana
         private void CheckInitialized()
         {
@@ -214,13 +217,69 @@ namespace MazeGame.World.Generation
             return this;
         }
 
+        public IMapBuilder SetEnemyNames(List<string> names)
+        {
+            _enemyNames = names;
+            return this;
+        }
+
+        public IMapBuilder SetItemPool(List<Func<Item>> pool)
+        {
+            _itemPool = pool;
+            return this;
+        }
+
+        public IMapBuilder AddRandomLoot(int count)
+        {
+            CheckInitialized();
+            if (_itemPool.Count == 0) return this;
+
+            int placed = 0;
+            while (placed < count)
+            {
+                int rx = _rnd.Next(Constants.MazeWidth);
+                int ry = _rnd.Next(Constants.MazeHeight);
+                if (!_cells[ry, rx].IsWall)
+                {
+                    // Losuje przedmiot z nowej puli
+                    _cells[ry, rx].Items.Add(_itemPool[_rnd.Next(_itemPool.Count)]());
+                    placed++;
+                }
+            }
+            return this;
+        }
+
+        public IMapBuilder AddSpecificItem(Item item)
+        {
+            CheckInitialized();
+            while (true)
+            {
+                int rx = _rnd.Next(Constants.MazeWidth);
+                int ry = _rnd.Next(Constants.MazeHeight);
+                if (!_cells[ry, rx].IsWall)
+                {
+                    _cells[ry, rx].Items.Add(item);
+                    break;
+                }
+            }
+            EnsureStructureHeader();
+            _instructions.Add($" - ARTIFACT: Hidden somewhere in the dungeon is the {item.Name}!");
+            return this;
+        }
+
+        public IMapBuilder AddInstruction(string message)
+        {
+            _instructions.Insert(0, message);
+            _instructions.Insert(1, "");
+            return this;
+        }
+
         // Metoda do losowego rozmieszczania wrogów na mapie, z losowymi statystykami i nazwami
         public IMapBuilder AddEnemies(int count)
         {
             CheckInitialized();
             int placed = 0;
 
-            string[] names = { "Goblin", "Orc", "Skeleton", "Zombie" };
 
             while (placed < count)
             {
@@ -230,13 +289,14 @@ namespace MazeGame.World.Generation
                 // Sprawdzamy, czy komórka nie jest ścianą i czy nie ma już wroga, zanim umieścimy nowego wroga
                 if (!_cells[ry, rx].IsWall && _cells[ry, rx].Enemy == null)
                 {
-                    string name = names[_rnd.Next(names.Length)];
+                    string enemyName = _enemyNames[_rnd.Next(_enemyNames.Count)];
+
                     int hp = _rnd.Next(20, 51);
                     int attack = _rnd.Next(5, 16);
                     int armor = _rnd.Next(0, 6);
 
                     EnemyStats stats = new EnemyStats(hp, attack, armor);
-                    _cells[ry, rx].Enemy = new Enemy(name, stats);
+                    _cells[ry, rx].Enemy = new Enemy(enemyName, stats);
                     placed++;
                 }
             }

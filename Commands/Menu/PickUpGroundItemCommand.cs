@@ -1,6 +1,7 @@
 ﻿using System;
 using MazeGame.Characters;
 using MazeGame.Items;
+using MazeGame.Logging;
 using MazeGame.UI;
 using MazeGame.World;
 
@@ -19,6 +20,7 @@ namespace MazeGame.Commands.Menu
 
             if (selected.PickUp(player))
             {
+                GameLog.GetInstance().Log($"{player.Name} picks up: {selected.Name}.");
                 currentCell.Items.RemoveAt(menu.SelectionIndex);
                 menu.CloseMenu();
             }

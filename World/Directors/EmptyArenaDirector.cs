@@ -13,7 +13,7 @@ namespace MazeGame.World.Directors
         {
             return builder
                 .BuildEmptyDungeon()
-                .AddRandomWeapons(30)
+                //.AddRandomWeapons(30)
                 .GetResult();
         }
     }

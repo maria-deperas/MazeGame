@@ -10,6 +10,7 @@ namespace MazeGame.Characters
 {
     public class Player
     {
+        public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public Attributes Stats { get; set; }
@@ -19,10 +20,11 @@ namespace MazeGame.Characters
         public int Coins { get; set; } = 0;
         public int Gold { get; set; } = 0;
 
-        public Player(int startx, int starty)
+        public Player(int startx, int starty, string name)
         {
             X = startx;
             Y = starty;
+            Name = name;
             Stats = new Attributes(10, 10, 50, 10, 10, 10);
         }
 

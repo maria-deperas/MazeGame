@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MazeGame.Items;
 
 namespace MazeGame.World.Generation
 {
@@ -14,8 +15,11 @@ namespace MazeGame.World.Generation
         IMapBuilder AddCorridors();
         IMapBuilder AddRooms(int n);
         IMapBuilder AddCentralRoom(int width, int height);
-        IMapBuilder AddRandomItems(int count);
-        IMapBuilder AddRandomWeapons(int count);
+        IMapBuilder SetEnemyNames(List<string> names);
+        IMapBuilder SetItemPool(List<Func<Item>> pool);
+        IMapBuilder AddSpecificItem(Item item);
+        IMapBuilder AddInstruction(string message);
+        IMapBuilder AddRandomLoot(int count);
         IMapBuilder AddEnemies(int count);
         Map GetResult();
     }

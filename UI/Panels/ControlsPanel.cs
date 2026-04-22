@@ -11,7 +11,7 @@ namespace MazeGame.UI.Panels
         private readonly IInputHandler _inputChain;
 
         public ControlsPanel(MenuManager menu, IInputHandler inputChain)
-            : base(Constants.LeftPanelWidth, 8, "CONTROLS")
+            : base(Constants.LeftPanelWidth, 17, "CONTROLS")
         {
             _menu = menu;
             _inputChain = inputChain;

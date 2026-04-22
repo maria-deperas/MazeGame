@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MazeGame.Characters;
+using MazeGame.Logging;
 using MazeGame.UI;
 using MazeGame.World;
 
@@ -39,6 +40,7 @@ namespace MazeGame.Commands.Exploration
 
             if (!_map.IsMovePossible(nextX, nextY))
             {
+                GameLog.GetInstance().Log($"{_player.Name} hits the wall.");
                 return;
             }
 

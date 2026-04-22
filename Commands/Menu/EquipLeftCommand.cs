@@ -1,6 +1,7 @@
 ﻿using System;
 using MazeGame.Characters;
 using MazeGame.Items;
+using MazeGame.Logging;
 using MazeGame.UI;
 using MazeGame.World;
 
@@ -18,6 +19,11 @@ namespace MazeGame.Commands.Menu
             if (!selected.IsEquippable)
             {
                 showMessage("You can only equip weapons or unusable items!");
+            }
+            else if (selected.AddToLeft(player))
+            {
+                GameLog.GetInstance().Log($"{player.Name} places {selected.Name} in their left hand.");
+                menu.CloseMenu();
             }
             else if (!selected.AddToLeft(player))
             {

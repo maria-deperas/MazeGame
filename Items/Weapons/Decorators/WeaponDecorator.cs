@@ -40,9 +40,9 @@ namespace MazeGame.Items.Weapons.Decorators
         public override bool IsEquippable => _wrappedWeapon.IsEquippable;
         public override bool IsTwoHanded => _wrappedWeapon.IsTwoHanded;
 
-        public override int AcceptDamage(ICombatVisitor visitor, int currentDamage, Attributes stats)
+        public override int AcceptDamage(ICombatVisitor visitor, Attributes stats)
         {
-            return _wrappedWeapon.AcceptDamage(visitor, currentDamage, stats);
+            return _wrappedWeapon.AcceptDamage(visitor, stats);
         }
 
         public override int AcceptDefense(ICombatVisitor visitor, Attributes stats)

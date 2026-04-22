@@ -8,8 +8,8 @@ namespace MazeGame.Characters.Combat
         public string AttackName => "Normal Attack";
 
         // Obrażenia
-        public int CalculateDamageHeavy(int weaponDamage, Attributes stats) => weaponDamage + stats.Strength + stats.Aggression; // Bez zmian
-        public int CalculateDamageLight(int weaponDamage, Attributes stats) => weaponDamage + stats.Agility + stats.Luck; // Bez zmian
+        public int CalculateDamageHeavy(int weaponDamage, Attributes stats) => weaponDamage + stats.Strength + stats.Aggression; 
+        public int CalculateDamageLight(int weaponDamage, Attributes stats) => weaponDamage + stats.Agility + stats.Luck; 
         public int CalculateDamageMagic(int weaponDamage, Attributes stats) => 1;
         public int CalculateDamageNonWeapon() => 0;
         // Obrona

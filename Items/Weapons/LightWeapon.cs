@@ -15,8 +15,10 @@ namespace MazeGame.Items.Weapons
             string grip = IsTwoHanded ? "two-handed" : "one-handed";
             return $"{Name} (Light Weapon, {grip}, DMG: {Damage})";
         }
-        public override int AcceptDamage(ICombatVisitor visitor, int currentDamage, Attributes stats)
-            => visitor.CalculateDamageLight(currentDamage, stats);
+        public override int AcceptDamage(ICombatVisitor visitor, Attributes stats)
+        {
+            return visitor.CalculateDamageLight(this.Damage, stats);
+        }
 
         public override int AcceptDefense(ICombatVisitor visitor, Attributes stats)
             => visitor.CalculateDefenseLight(stats);

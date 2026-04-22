@@ -1,6 +1,7 @@
 ﻿using System;
 using MazeGame.Characters;
 using MazeGame.Characters.Combat;
+using MazeGame.Logging;
 using MazeGame.UI;
 using MazeGame.World;
 
@@ -25,16 +26,14 @@ namespace MazeGame.Commands.Menu
             // Obliczanie obrażeń i obrony na podstawie broni w rękach
             if (player.RightHand != null)
             {
-                int rightBaseDmg = (player.RightHand as Items.Weapons.Weapon)?.Damage ?? 0;
-                playerDamage += player.RightHand.AcceptDamage(visitor, rightBaseDmg, player.Stats);
-                playerDefense += player.RightHand.AcceptDefense(visitor, player.Stats);
+                playerDamage += player.RightHand.AcceptDamage(visitor, player.Stats);
+                playerDefense = player.RightHand.AcceptDefense(visitor, player.Stats);
                 holdsAnyWeapon = true;
             }
             if (player.LeftHand != null)
             {
-                int leftBaseDmg = (player.LeftHand as Items.Weapons.Weapon)?.Damage ?? 0;
-                playerDamage += player.LeftHand.AcceptDamage(visitor, leftBaseDmg, player.Stats);
-                playerDefense += player.LeftHand.AcceptDefense(visitor, player.Stats);
+                playerDamage += player.LeftHand.AcceptDamage(visitor, player.Stats);
+                playerDefense = player.LeftHand.AcceptDefense(visitor, player.Stats);
                 holdsAnyWeapon = true;
             }
             if (!holdsAnyWeapon)
@@ -47,31 +46,31 @@ namespace MazeGame.Commands.Menu
             int actualDamageToEnemy = Math.Max(0, playerDamage - enemy.Stats.Armor);
             enemy.Stats.CurrentHealth -= actualDamageToEnemy;
 
-            string log = $"[{visitor.AttackName}] You hit {enemy.Name} for {actualDamageToEnemy} dmg!";
+            // KRÓTKA WIADOMOŚĆ
+            GameLog.GetInstance().Log($"Hit {enemy.Name} for {actualDamageToEnemy} dmg!");
 
-            // Gdy przeciwnik ginie usuwamy go z mapy i zamykamy menu walki
+            // 2. Sprawdzamy czy przeciwnik zginął
             if (enemy.Stats.CurrentHealth <= 0)
             {
-                log += $" {enemy.Name} died! You won!";
+                GameLog.GetInstance().Log($"{enemy.Name} died!");
                 menu.ActiveCell.Enemy = null;
                 menu.CloseMenu();
-                showMessage(log);
                 return;
             }
 
-            // Kontratak przeciwnika
+            // 3. Kontratak przeciwnika
             int actualDamageToPlayer = Math.Max(0, enemy.Stats.Attack - playerDefense);
             player.Stats.Health -= actualDamageToPlayer;
 
-            log += $"\n{enemy.Name} counter-attacks for {actualDamageToPlayer} dmg! (Your HP: {player.Stats.Health})";
+            // KRÓTKA WIADOMOŚĆ
+            GameLog.GetInstance().Log($"{enemy.Name} counter-attacks for {actualDamageToPlayer} dmg!");
 
-            // Jeśli gracz ginie, zamykamy menu walki i wyświetlamy komunikat o śmierci
+            // 4. Śmierć gracza
             if (player.Stats.Health <= 0)
             {
-                log += "\nYOU DIED! GAME OVER.";
+                GameLog.GetInstance().Log("YOU DIED! GAME OVER.");
                 menu.CloseMenu();
             }
-            showMessage(log);
         }
     }
 }

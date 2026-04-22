@@ -23,6 +23,6 @@ namespace MazeGame.Core
 
         public const int LeftPanelWidth = 20;
         public const int RightPanelWidth = 50; 
-        public const int PanelHeight = MazeHeight + 2;
+        public const int PanelHeight = MazeHeight + 4;
     }
 }

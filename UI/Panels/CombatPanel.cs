@@ -21,7 +21,7 @@ namespace MazeGame.UI.Panels
 
             if (_menu.CurrentMenu == MenuMode.Combat && enemy != null)
             {
-                lines.Add($"Enemy: {enemy.Name} {enemy.GetColoredSymbol()}");
+                lines.Add($"Enemy: {enemy.Name}");
                 lines.Add($"HP:         {enemy.Stats.CurrentHealth} / {enemy.Stats.MaxHealth}");
                 lines.Add($"Attack:       {enemy.Stats.Attack}");
                 lines.Add($"Armor:    {enemy.Stats.Armor}");

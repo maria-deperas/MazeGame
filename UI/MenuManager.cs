@@ -3,6 +3,7 @@ using MazeGame.World;
 using MazeGame.Commands.Menu;
 using System.ComponentModel.Design;
 using MazeGame.Characters.Combat;
+using MazeGame.Logging;
 
 namespace MazeGame.UI
 {
@@ -59,8 +60,10 @@ namespace MazeGame.UI
 
             if (currentCell.Items.Count == 1)
             {
-                if (currentCell.Items[0].PickUp(player))
+                var item = currentCell.Items[0];
+                if (item.PickUp(player))
                 {
+                    GameLog.GetInstance().Log($"{player.Name} picks up: {item.Name}.");
                     currentCell.Items.RemoveAt(0);
                 }
                 else showMessage("Backpack is full!");
