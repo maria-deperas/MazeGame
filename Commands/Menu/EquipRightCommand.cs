@@ -21,7 +21,7 @@ namespace MazeGame.Commands.Menu
             }
             else if (selected.AddToRight(player))
             {
-                GameLog.GetInstance().Log($"{player.Name} places {selected.Name} in their left hand.");
+                GameLog.GetInstance().Log($"{player.Name} places {selected.Name} in their right hand.");
                 menu.CloseMenu();
             }
             else if (!selected.AddToRight(player))

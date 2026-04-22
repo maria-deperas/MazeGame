@@ -16,87 +16,96 @@ public class Program
 {
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
-        Console.CursorVisible = false;
+        InitializeConsole();
 
-        // Wczytywanie konfiguracji z pliku JSON
+        // konfiguracja i Logowanie
         GameConfig config = LoadConfig("config.json");
+        SetupLogging(config);
 
-        GameLog gameLog = GameLog.GetInstance();
+        // budowanie Świata
+        Map map = CreateMap();
+        Player player = new Player(0, 0, config.PlayerName);
 
-        var fileLogger = new FileLogger(config.LogFilePath, config.PlayerName);
-        var memoryLogger = new MemoryLogger();
+        // przygotowanie interfejsu
+        MenuManager menuManager = new MenuManager();
+        var (leftColumn, mapRenderer, rightColumn, menuHandler) = InitializeUI(player, map, menuManager);
 
-        gameLog.AddLogger(fileLogger);
-        gameLog.SetMemoryLogger(memoryLogger);
-        gameLog.Log($"{config.PlayerName} enters the labyrinth.");
-
-        int totalWidth = Constants.LeftPanelWidth + Constants.MazeWidth + Constants.RightPanelWidth + 6;
-        int totalHeight = Constants.PanelHeight + 5;
-
-        Console.SetWindowSize(totalWidth, totalHeight);
-        Console.SetBufferSize(totalWidth, totalHeight);
-
-        IMapBuilder builder = new StandardMapBuilder();
-        MazeGame.World.Themes.IThemeFactory factory = new MazeGame.World.Themes.GardenThemeFactory();
-        MapDirector strategy = new MazeGame.World.Directors.ThemeDungeonDirector(factory);
-        Map map = strategy.Generate(builder);
-
-        // Ekran powitalny z instrukcjami
+        // start gry
         InstructionScreen welcomeScreen = new InstructionScreen();
         welcomeScreen.ShowAndAwaitStart(map.Instructions);
 
-        // Inicjalizacja gracza i zarządzania menu
-        Player player = new Player(0, 0, config.PlayerName);
-        MenuManager menuManager = new MenuManager();
-        ScreenRenderer screenRenderer = new ScreenRenderer();
+        RunGameLoop(player, menuHandler, leftColumn, mapRenderer, rightColumn);
+    }
 
-        // 2. Podpinamy go pod nasz delegat showMessage
+    private static void InitializeConsole()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.CursorVisible = false;
+    }
+
+    private static void SetupLogging(GameConfig config)
+    {
+        GameLog gameLog = GameLog.GetInstance();
+        gameLog.AddLogger(new FileLogger(config.LogFilePath, config.PlayerName));
+        gameLog.SetMemoryLogger(new MemoryLogger());
+        gameLog.Log($"{config.PlayerName} enters the labyrinth.");
+    }
+
+    private static Map CreateMap()
+    {
+        IMapBuilder builder = new StandardMapBuilder();
+        var factory = new MazeGame.World.Themes.GardenThemeFactory();
+        var strategy = new ThemeDungeonDirector(factory);
+        return strategy.Generate(builder);
+    }
+
+    private static (IRenderable left, IRenderable mid, IRenderable right, MenuInputHandler handler) InitializeUI(Player player, Map map, MenuManager menuManager)
+    {
+        int totalWidth = Constants.LeftPanelWidth + Constants.MazeWidth + Constants.RightPanelWidth + 6;
+        int totalHeight = Constants.PanelHeight + 5;
+        Console.SetWindowSize(totalWidth, totalHeight);
+        Console.SetBufferSize(totalWidth, totalHeight);
+
         Action<string> showMessage = msg => GameLog.GetInstance().Log(msg);
-        // Lewa kolumna
-        var attrPanel = new AttributesPanel(player);
-        var walletPanel = new WalletPanel(player);
 
+        // chain of responsibility
         var menuHandler = new MenuInputHandler(menuManager, player, map, showMessage);
         var movementHandler = new MovementHandler(player, map, menuManager, showMessage);
         var actionHandler = new ActionHandler(player, map, menuManager, showMessage);
-
         menuHandler.SetNext(movementHandler).SetNext(actionHandler);
 
-        var controlsPanel = new ControlsPanel(menuManager, menuHandler);
-
-        var leftColumn = new VerticalStackPanel(
+        // Panele
+        var left = new VerticalStackPanel(
             Constants.LeftPanelWidth,
             Constants.PanelHeight,
-            attrPanel, walletPanel, controlsPanel
+            new AttributesPanel(player),
+            new WalletPanel(player),
+            new ControlsPanel(menuManager, menuHandler)
         );
 
-        // Prawa kolumna
-        var equipPanel = new EquippedPanel(player);
-        var groundPanel = new GroundItemsPanel(map, player, menuManager);
-        var backpackPanel = new BackpackPanel(player, menuManager);
-        var combatPanel = new CombatPanel(menuManager);
-        var logPanel = new LogPanel();
-
-        var rightColumn = new VerticalStackPanel(
+        var right = new VerticalStackPanel(
             Constants.RightPanelWidth,
             Constants.PanelHeight,
-            equipPanel, groundPanel, backpackPanel, combatPanel, logPanel
+            new EquippedPanel(player),
+            new GroundItemsPanel(map, player, menuManager),
+            new BackpackPanel(player, menuManager),
+            new CombatPanel(menuManager), new LogPanel()
         );
 
-        var mapRenderer = new MapRenderer(map, player);
+        return (left, new MapRenderer(map, player), right, menuHandler);
+    }
 
-        // Główna pętla gry
+    private static void RunGameLoop(Player player, MenuInputHandler handler, IRenderable left, IRenderable mid, IRenderable right)
+    {
+        ScreenRenderer renderer = new ScreenRenderer();
+
         while (true)
         {
-            screenRenderer.DrawScreen(leftColumn, mapRenderer, rightColumn);
+            renderer.DrawScreen(left, mid, right);
 
             if (Console.KeyAvailable)
             {
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                bool handled = menuHandler.Handle(keyInfo.Key);
-
-                if (!handled)
+                if (!handler.Handle(Console.ReadKey(true).Key))
                 {
                     GameLog.GetInstance().Log("An unknown button was pressed.");
                 }
@@ -109,6 +118,7 @@ public class Program
             }
         }
     }
+
     // metoda odpowiedzialna za wczytywanie konfiguracji z pliku JSON. 
     static GameConfig LoadConfig(string path)
     {

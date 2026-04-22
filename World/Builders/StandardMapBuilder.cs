@@ -263,7 +263,7 @@ namespace MazeGame.World.Generation
                 }
             }
             EnsureStructureHeader();
-            _instructions.Add($" - ARTIFACT: Hidden somewhere in the dungeon is the {item.Name}!");
+            _instructions.Add($" - Artifact: Hidden somewhere in the dungeon is the {item.Name}!");
             return this;
         }
 
@@ -286,7 +286,6 @@ namespace MazeGame.World.Generation
                 int rx = _rnd.Next(Constants.MazeWidth);
                 int ry = _rnd.Next(Constants.MazeHeight);
 
-                // Sprawdzamy, czy komórka nie jest ścianą i czy nie ma już wroga, zanim umieścimy nowego wroga
                 if (!_cells[ry, rx].IsWall && _cells[ry, rx].Enemy == null)
                 {
                     string enemyName = _enemyNames[_rnd.Next(_enemyNames.Count)];
