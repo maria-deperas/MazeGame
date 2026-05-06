@@ -11,6 +11,7 @@ namespace MazeGame.Items
         Color ItemColor { get; }
         bool IsTwoHanded { get; }
         bool IsEquippable { get; }
+        int SoundRange { get; }
 
         string GetInfo();
         string GetColoredSymbol();

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MazeGame.Characters;
 using MazeGame.Core;
 using MazeGame.Items;
+using MazeGame.Characters.Enemies;
+using MazeGame.Events;
 
 namespace MazeGame.World.Generation
 {
@@ -20,6 +22,9 @@ namespace MazeGame.World.Generation
 
         private List<string> _enemyNames = new List<string> { "Default enemy" };
         private List<Func<Item>> _itemPool = new List<Func<Item>>();
+        
+        private SoundPublisher _soundPublisher = new SoundPublisher();
+        private Dictionary<string, SpeciesPublisher> _speciesPublishers = new Dictionary<string, SpeciesPublisher>();
 
         // Metoda pomocnicza do sprawdzania, czy mapa została zainicjalizowana
         private void CheckInitialized()
@@ -274,12 +279,15 @@ namespace MazeGame.World.Generation
             return this;
         }
 
-        // Metoda do losowego rozmieszczania wrogów na mapie, z losowymi statystykami i nazwami
         public IMapBuilder AddEnemies(int count)
         {
             CheckInitialized();
             int placed = 0;
 
+            if (!_speciesPublishers.ContainsKey("Goblin"))
+                _speciesPublishers["Goblin"] = new SpeciesPublisher("Goblin");
+            if (!_speciesPublishers.ContainsKey("Skeleton"))
+                _speciesPublishers["Skeleton"] = new SpeciesPublisher("Skeleton");
 
             while (placed < count)
             {
@@ -288,14 +296,28 @@ namespace MazeGame.World.Generation
 
                 if (!_cells[ry, rx].IsWall && _cells[ry, rx].Enemy == null)
                 {
-                    string enemyName = _enemyNames[_rnd.Next(_enemyNames.Count)];
-
                     int hp = _rnd.Next(20, 51);
                     int attack = _rnd.Next(5, 16);
                     int armor = _rnd.Next(0, 6);
-
                     EnemyStats stats = new EnemyStats(hp, attack, armor);
-                    _cells[ry, rx].Enemy = new Enemy(enemyName, stats);
+
+                    Enemy newEnemy;
+                    SpeciesPublisher speciesPub;
+
+                    if (_rnd.Next(2) == 0)
+                    {
+                        newEnemy = new Goblin(stats);
+                        speciesPub = _speciesPublishers["Goblin"];
+                    }
+                    else
+                    {
+                        newEnemy = new Skeleton(stats);
+                        speciesPub = _speciesPublishers["Skeleton"];
+                    }
+
+                    newEnemy.InitializeSubscriptions(speciesPub, _soundPublisher, rx, ry);
+                    
+                    _cells[ry, rx].Enemy = newEnemy;
                     placed++;
                 }
             }
@@ -333,7 +355,7 @@ namespace MazeGame.World.Generation
             _instructions.Add("");
             _instructions.Add("Press [ENTER] to start the game...");
 
-            Map finalMap = new Map(_cells, new List<string>(_instructions));
+            Map finalMap = new Map(_cells, new List<string>(_instructions), _soundPublisher);
 
             _cells = null;
 

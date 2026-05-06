@@ -22,6 +22,7 @@ namespace MazeGame.Commands.Menu
             {
                 GameLog.GetInstance().Log($"{player.Name} picks up: {selected.Name}.");
                 currentCell.Items.RemoveAt(menu.SelectionIndex);
+                map.SoundManager.NotifySubscribers(player.X, player.Y, selected.SoundRange, map);
                 menu.CloseMenu();
             }
             else

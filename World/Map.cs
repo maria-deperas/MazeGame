@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MazeGame.Core;
+using MazeGame.Events;
+using MazeGame.Characters;
 
 namespace MazeGame.World
 {
@@ -14,10 +16,13 @@ namespace MazeGame.World
 
         // Lista przechowująca instrukcje dla tej konkretnej mapy
         public List<string> Instructions { get; private set; }
-        public Map(Cell[,] cells, List<string> instructions)
+        
+        public SoundPublisher SoundManager { get; private set; }
+        public Map(Cell[,] cells, List<string> instructions, SoundPublisher soundPublisher = null)
         {
             _cells = cells;
             Instructions = instructions;
+            SoundManager = soundPublisher;
         }
 
         public Cell GetCell(int x, int y)
@@ -32,6 +37,59 @@ namespace MazeGame.World
             if (_cells[y, x].IsWall)
                 return false;
             return true;
+        }
+        
+        public void MoveEnemies(Player player)
+        {
+            Random rnd = new Random();
+            List<Enemy> enemiesToMove = new List<Enemy>();
+
+            for (int y = 0; y < Constants.MazeHeight; y++)
+            {
+                for (int x = 0; x < Constants.MazeWidth; x++)
+                {
+                    if (_cells[y, x].HasEnemy)
+                    {
+                        enemiesToMove.Add(_cells[y, x].Enemy);
+                    }
+                }
+            }
+
+            (int dx, int dy)[] directions = { (0, -1), (0, 1), (-1, 0), (1, 0) };
+
+            foreach (var enemy in enemiesToMove)
+            {
+                List<(int x, int y)> validMoves = new List<(int, int)>();
+
+                foreach (var dir in directions)
+                {
+                    int nx = enemy.X + dir.dx;
+                    int ny = enemy.Y + dir.dy;
+
+                    if (IsMovePossible(nx, ny))
+                    {
+                        if (!_cells[ny, nx].HasEnemy && !(nx == player.X && ny == player.Y))
+                        {
+                            validMoves.Add((nx, ny));
+                        }
+                    }
+                }
+
+                if (validMoves.Count > 0)
+                {
+                    if (rnd.Next(100) < 75)
+                    {
+                        var move = validMoves[rnd.Next(validMoves.Count)];
+
+                        _cells[enemy.Y, enemy.X].Enemy = null;
+
+                        enemy.X = move.x;
+                        enemy.Y = move.y;
+
+                        _cells[enemy.Y, enemy.X].Enemy = enemy;
+                    }
+                }
+            }
         }
     }
 }

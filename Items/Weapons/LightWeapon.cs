@@ -10,6 +10,7 @@ namespace MazeGame.Items.Weapons
 {
     public abstract class LightWeapon : Weapon
     {
+        public override int SoundRange => 2;
         public override string GetInfo()
         {
             string grip = IsTwoHanded ? "two-handed" : "one-handed";

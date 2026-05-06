@@ -54,6 +54,7 @@ namespace MazeGame.Commands.Exploration
             else
             {
                 _player.Move(nextX, nextY);
+                _map.MoveEnemies(_player);
             }
         }
     }

@@ -20,6 +20,7 @@ namespace MazeGame.Items
         public abstract Color ItemColor { get; } // kolor danego przedmiotu
         public virtual bool IsTwoHanded => false; // domyślnie przedmioty są jednoręczne
         public virtual bool IsEquippable => false;
+        public virtual int SoundRange => 1;
         public abstract string GetInfo(); // podstawowe informacje o przedmiocie
         public abstract bool PickUp(Player player); // podnoszenie przedmiotu
         public string GetColoredSymbol()

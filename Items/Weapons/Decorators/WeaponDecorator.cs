@@ -39,6 +39,7 @@ namespace MazeGame.Items.Weapons.Decorators
         public override Color ItemColor => _wrappedWeapon.ItemColor;
         public override bool IsEquippable => _wrappedWeapon.IsEquippable;
         public override bool IsTwoHanded => _wrappedWeapon.IsTwoHanded;
+        public override int SoundRange => _wrappedWeapon.SoundRange;
 
         public override int AcceptDamage(ICombatVisitor visitor, Attributes stats)
         {

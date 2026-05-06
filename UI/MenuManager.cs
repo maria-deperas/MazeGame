@@ -65,6 +65,7 @@ namespace MazeGame.UI
                 {
                     GameLog.GetInstance().Log($"{player.Name} picks up: {item.Name}.");
                     currentCell.Items.RemoveAt(0);
+                    map.SoundManager.NotifySubscribers(player.X, player.Y, item.SoundRange, map);
                 }
                 else showMessage("Backpack is full!");
             }

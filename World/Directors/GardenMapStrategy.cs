@@ -12,10 +12,11 @@ namespace MazeGame.World.Directors
         public void GenerateMap(IMapBuilder builder)
         {
             builder.BuildFilledDungeon()
-                   .AddRooms(15)
+                   .AddRooms(25)
+                   .AddCentralRoom(20, 10)
                    .AddCorridors()
-                   .AddRandomLoot(20)
-                   .AddEnemies(15); 
+                   .AddRandomLoot(25)
+                   .AddEnemies(25); 
         }
     }
 }

@@ -10,6 +10,7 @@ namespace MazeGame.Items.Weapons
 {
     public abstract class MagicWeapon : Weapon
     {
+        public override int SoundRange => 4;
         public override int AcceptDamage(ICombatVisitor visitor, Attributes stats)
         {
             return visitor.CalculateDamageMagic(this.Damage, stats);

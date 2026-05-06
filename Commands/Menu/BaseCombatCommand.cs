@@ -1,6 +1,7 @@
 ﻿using System;
 using MazeGame.Characters;
-using MazeGame.Characters.Combat;
+using MazeGame.Characters.Combat;  
+using MazeGame.Characters.Enemies;
 using MazeGame.Logging;
 using MazeGame.UI;
 using MazeGame.World;
@@ -23,7 +24,6 @@ namespace MazeGame.Commands.Menu
             int playerDefense = 0;
             bool holdsAnyWeapon = false;
 
-            // Obliczanie obrażeń i obrony na podstawie broni w rękach
             if (player.RightHand != null)
             {
                 playerDamage += player.RightHand.AcceptDamage(visitor, player.Stats);
@@ -42,15 +42,15 @@ namespace MazeGame.Commands.Menu
                 playerDefense = visitor.CalculateDefenseNonWeapon(player.Stats);
             }
 
-            // Atakujemy przeciwnika
             int actualDamageToEnemy = Math.Max(0, playerDamage - enemy.Stats.Armor);
             enemy.Stats.CurrentHealth -= actualDamageToEnemy;
 
             GameLog.GetInstance().Log($"Hit {enemy.Name} for {actualDamageToEnemy} dmg!");
 
-            // sprawdzamy czy przeciwnik zginął
+            // sprawdzamy, czy przeciwnik zginął
             if (enemy.Stats.CurrentHealth <= 0)
             {
+                enemy.Die();
                 GameLog.GetInstance().Log($"{enemy.Name} died!");
                 menu.ActiveCell.Enemy = null;
                 menu.CloseMenu();
@@ -69,6 +69,7 @@ namespace MazeGame.Commands.Menu
                 GameLog.GetInstance().Log("YOU DIED! GAME OVER.");
                 menu.CloseMenu();
             }
+           
         }
     }
 }
