@@ -36,7 +36,7 @@ namespace MazeGame.World.Themes
                 () => new Rope(),
                 () => new Saber(),
                 () => new Dagger(),
-                () => new Sword(),
+                //() => new Sword(),
                 () => new RustyMachete(),
                 () => new MagicWand()
             };

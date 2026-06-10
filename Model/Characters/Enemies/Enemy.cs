@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
 using MazeGame.Events;
 using Pastel;
+using MazeGame.Characters.Enemies.Behaviors;
+using MazeGame.Logging;
 
 namespace MazeGame.Characters
 {
@@ -11,6 +13,11 @@ namespace MazeGame.Characters
         
         public char Symbol { get; set; }
         public Color Color { get; set; }
+        
+        public int VisionRange { get; protected set; } = 5;
+        public (int x, int y)? LastHeardSound { get; set; } // ostatnia usłyszana pozycja dźwięku
+        public IEnemyBehavior PlayerBehavior { get; set; } = new IgnoreBehavior(); // reagowanie na gracza
+        public IEnemyBehavior SoundBehavior  { get; set; } = new IgnoreBehavior(); // reagowanie na dźwięk
 
         public int X { get; set; }
         public int Y { get; set; }
@@ -49,7 +56,13 @@ namespace MazeGame.Characters
             _sound?.Unsubscribe(this);
         }
 
-        public abstract void UpdateOnSound(int sourceX, int sourceY, int range);
+        public virtual void UpdateOnSound(int sourceX, int sourceY, int range)
+        {
+            LastHeardSound = (sourceX, sourceY);
+            GameLog.GetInstance().Log($"{Name} hears something at [{sourceX},{sourceY}].");
+        }
+        
+        public virtual void OnAttacked() { }
         public abstract void UpdateOnDeath();
     }
 }

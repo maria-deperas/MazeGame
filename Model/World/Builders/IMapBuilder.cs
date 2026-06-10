@@ -21,6 +21,7 @@ namespace MazeGame.World.Generation
         IMapBuilder AddInstruction(string message);
         IMapBuilder AddRandomLoot(int count);
         IMapBuilder AddEnemies(int count);
+        IMapBuilder AddRandomSlotItems(int count);
         Map GetResult();
     }
 }

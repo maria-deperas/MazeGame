@@ -113,8 +113,9 @@ namespace MazeGame.Core
 
             int actualDamageToEnemy = Math.Max(0, playerDamage - enemy.Stats.Armor);
             enemy.Stats.CurrentHealth -= actualDamageToEnemy;
+            enemy.OnAttacked(); // reakcja na atak
             _log.Log($"Hit {enemy.Name} for {actualDamageToEnemy} dmg!");
-
+            
             if (enemy.Stats.CurrentHealth <= 0)
             {
                 enemy.Die();

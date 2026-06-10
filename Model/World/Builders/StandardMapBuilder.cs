@@ -8,6 +8,8 @@ using MazeGame.Core;
 using MazeGame.Items;
 using MazeGame.Characters.Enemies;
 using MazeGame.Events;
+using MazeGame.Items.Passives;
+using MazeGame.Items.Holders;
 
 namespace MazeGame.World.Generation
 {
@@ -287,7 +289,9 @@ namespace MazeGame.World.Generation
                 _speciesPublishers["Goblin"] = new SpeciesPublisher("Goblin");
             if (!_speciesPublishers.ContainsKey("Skeleton"))
                 _speciesPublishers["Skeleton"] = new SpeciesPublisher("Skeleton");
-
+            if (!_speciesPublishers.ContainsKey("Troll"))
+                _speciesPublishers["Troll"] = new SpeciesPublisher("Troll");
+            
             while (placed < count)
             {
                 int rx = _rnd.Next(Constants.MazeWidth);
@@ -303,15 +307,21 @@ namespace MazeGame.World.Generation
                     Enemy newEnemy;
                     SpeciesPublisher speciesPub;
 
-                    if (_rnd.Next(2) == 0)
+                    int roll = _rnd.Next(3);
+                    if (roll == 0)
                     {
                         newEnemy = new Goblin(stats);
                         speciesPub = _speciesPublishers["Goblin"];
                     }
-                    else
+                    else if (roll == 1)
                     {
                         newEnemy = new Skeleton(stats);
                         speciesPub = _speciesPublishers["Skeleton"];
+                    }
+                    else
+                    {
+                        newEnemy = new Troll(stats);
+                        speciesPub = _speciesPublishers["Troll"];
                     }
 
                     newEnemy.InitializeSubscriptions(speciesPub, _soundPublisher, rx, ry);
@@ -344,6 +354,18 @@ namespace MazeGame.World.Generation
                     placed++;
                 }
             }
+        }
+        
+        // umieszcza losowe kamienie i holdery na mapie
+        public IMapBuilder AddRandomSlotItems(int count)
+        {
+            CheckInitialized();
+            PlaceRandomly(() => _itemFactory.GetRandomSlotItem(), count);
+            if (!_instructions.Any(s => s.Contains("Slot items")))
+            {
+                _instructions.Add($" - Slot items: There are {count} passive items and holders scattered around.");
+            }
+            return this;
         }
 
         // Metoda do zwracania gotowej mapy wraz z instrukcjami dla gracza

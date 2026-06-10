@@ -43,53 +43,52 @@ namespace MazeGame.World
             Random rnd = new Random();
             var locked  = lockedEnemies  != null ? new HashSet<Enemy>(lockedEnemies)         : null;
             var blocked = playerPositions != null ? new HashSet<(int, int)>(playerPositions) : null;
-            List<Enemy> enemiesToMove = new List<Enemy>();
+            var playerList = playerPositions?.ToList() ?? new List<(int x, int y)>();
 
+            List<Enemy> enemiesToMove = new List<Enemy>();
             for (int y = 0; y < Constants.MazeHeight; y++)
-            {
-                for (int x = 0; x < Constants.MazeWidth; x++)
-                {
-                    if (_cells[y, x].HasEnemy)
-                    {
-                        enemiesToMove.Add(_cells[y, x].Enemy!);
-                    }
-                }
-            }
+            for (int x = 0; x < Constants.MazeWidth; x++)
+                if (_cells[y, x].HasEnemy)
+                    enemiesToMove.Add(_cells[y, x].Enemy!);
 
             (int dx, int dy)[] directions = { (0, -1), (0, 1), (-1, 0), (1, 0) };
 
             foreach (var enemy in enemiesToMove)
             {
                 if (locked != null && locked.Contains(enemy)) continue;
-                List<(int x, int y)> validMoves = new List<(int, int)>();
 
+                List<(int x, int y)> validMoves = new List<(int, int)>();
                 foreach (var dir in directions)
                 {
                     int nx = enemy.X + dir.dx;
                     int ny = enemy.Y + dir.dy;
-
-                    if (IsMovePossible(nx, ny))
-                    {
-                        if (!_cells[ny, nx].HasEnemy && !(blocked != null && blocked.Contains((nx, ny))))
-                        {
-                            validMoves.Add((nx, ny));
-                        }
-                    }
+                    if (IsMovePossible(nx, ny) && !_cells[ny, nx].HasEnemy
+                                               && !(blocked != null && blocked.Contains((nx, ny))))
+                        validMoves.Add((nx, ny));
                 }
 
-                if (validMoves.Count > 0)
+                if (validMoves.Count == 0) continue;
+
+                // gracz > dźwięk > losowy
+                (int x, int y)? move = null;
+
+                // gracz
+                move = enemy.PlayerBehavior.GetMove(enemy, validMoves, playerList, this);
+
+                // dźwięk
+                if (move == null)
+                    move = enemy.SoundBehavior.GetMove(enemy, validMoves, playerList, this);
+
+                // losowy ruch
+                if (move == null && rnd.Next(100) < 75)
+                    move = validMoves[rnd.Next(validMoves.Count)];
+
+                if (move != null)
                 {
-                    if (rnd.Next(100) < 75)
-                    {
-                        var move = validMoves[rnd.Next(validMoves.Count)];
-
-                        _cells[enemy.Y, enemy.X].Enemy = null;
-
-                        enemy.X = move.x;
-                        enemy.Y = move.y;
-
-                        _cells[enemy.Y, enemy.X].Enemy = enemy;
-                    }
+                    _cells[enemy.Y, enemy.X].Enemy = null;
+                    enemy.X = move.Value.x;
+                    enemy.Y = move.Value.y;
+                    _cells[enemy.Y, enemy.X].Enemy = enemy;
                 }
             }
         }

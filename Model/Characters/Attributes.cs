@@ -24,5 +24,26 @@ namespace MazeGame.Characters
             Aggression = agr;
             Wisdom = wis;
         }
+        
+        // metody do dodawania/odejmowania bonusów
+        public void Add(Attributes other)
+        {
+            Strength += other.Strength;
+            Agility += other.Agility;
+            Health += other.Health;
+            Luck += other.Luck;
+            Aggression += other.Aggression;
+            Wisdom += other.Wisdom;
+        }
+
+        public void Subtract(Attributes other)
+        {
+            Strength -= other.Strength;
+            Agility -= other.Agility;
+            Health -= other.Health;
+            Luck -= other.Luck;
+            Aggression -= other.Aggression;
+            Wisdom -= other.Wisdom;
+        }
     }
 }
