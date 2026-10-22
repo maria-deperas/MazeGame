@@ -1,88 +1,88 @@
 # MazeGame
 
-Konsolowa gra w labirynt napisana w **C# / .NET 8**, z trybem lokalnym oraz sieciowym trybem wieloosobowym (klient–serwer przez TCP).
+A console maze game written in **C# / .NET 8**, with a local single-player mode and a networked multiplayer mode (client–server over TCP).
 
-Projekt powstał na przedmiot **Projektowanie Obiektowe**. Był rozwijany iteracyjnie w 7 etapach. Każdy etap dokładał nowe wymagania, więc kod musiał pozostać otwarty na rozszerzenia i łatwy do zmiany. Głównym celem było świadome stosowanie zasad **SOLID** i **wzorców projektowych**.
+Built for the **Object-Oriented Design** course at university. The project was developed iteratively over 7 stages. Each stage added new requirements, so the code had to stay open for extension and easy to change. The main goal was the deliberate use of **SOLID** principles and **design patterns**.
 
-## Funkcje
+## Features
 
-- **Generowanie map**: proceduralne lochy w kilku motywach (Garden, Library, Vault).
-- **System przedmiotów**: broń jedno- i dwuręczna, przedmioty pasywne zwiększające atrybuty, waluta i przedmioty fabularne. Przedmioty można podnosić, upuszczać i zakładać do lewej lub prawej ręki.
-- **Modyfikatory broni**: np. *Strong* i *Unlucky*, które można dowolnie łączyć.
-- **Walka**: trzy rodzaje ataku (zwykły, z ukrycia i magiczny), których skuteczność zależy od użytej broni.
-- **Przeciwnicy z AI**: Goblin, Szkielet i Troll. Każdy ma własną strategię zachowania (podążanie za graczem, ucieczka, reakcja na dźwięk albo ignorowanie gracza).
-- **Multiplayer**: autorytatywny serwer zarządza stanem gry, a klienci wysyłają akcje i odbierają stan w formacie JSON.
-- **Interfejs konsolowy**: kolorowe panele (atrybuty, ekwipunek, plecak, walka, log zdarzeń).
-- **Logowanie**: zapis zdarzeń do pliku i do pamięci, z podglądem w grze.
+- **Map generation**: procedurally generated dungeons in several themes (Garden, Library, Vault).
+- **Item system**: one- and two-handed weapons, passive items that boost attributes, currency and quest items. Items can be picked up, dropped and equipped in the left or right hand.
+- **Weapon modifiers**: e.g. *Strong* and *Unlucky*, which can be freely stacked.
+- **Combat**: three attack types (normal, stealth and magic), whose effectiveness depends on the weapon used.
+- **Enemy AI**: Goblin, Skeleton and Troll. Each has its own behavior strategy (following the player, fleeing, reacting to sound or ignoring the player).
+- **Multiplayer**: an authoritative server manages the game state, while clients send actions and receive state updates as JSON.
+- **Console UI**: colored panels (attributes, equipment, backpack, combat, event log).
+- **Logging**: events are written to a file and kept in memory, with an in-game log viewer.
 
-## Architektura
+## Architecture
 
-Projekt jest zbudowany w oparciu o **MVC**, a warstwa sieciowa jest wydzielona osobno:
+The project follows **MVC**, with the networking layer kept separate:
 
 ```
-Controller/   obsługa wejścia, komendy, punkt wejścia (Program.cs)
-Model/        logika gry: postacie, przedmioty, walka, świat, zdarzenia, DTO
-View/         renderowanie: widok lokalny, widok klienta, widok serwera
-Network/      serwer TCP, klient, sesje, protokół JSON
-Core/         stałe i konfiguracja klawiszy
+Controller/   input handling, commands, entry point (Program.cs)
+Model/        game logic: characters, items, combat, world, events, DTOs
+View/         rendering: local view, client view, server view
+Network/      TCP server, client, sessions, JSON protocol
+Core/         constants and key bindings
 ```
 
-Ten sam model gry obsługuje tryb lokalny i sieciowy. Zmienia się tylko widok i źródło wejścia (`IGameView`, `IInputHandler`).
+The same game model drives both local and network modes. Only the view and the input source change (`IGameView`, `IInputHandler`).
 
-## Zastosowane wzorce projektowe
+## Design patterns
 
-| Wzorzec | Zastosowanie |
+| Pattern | Usage |
 |---|---|
-| **Builder + Director** | Budowanie mapy krok po kroku (`StandardMapBuilder`, `MapDirector`, `ThemeDungeonDirector`) |
-| **Abstract Factory** | Rodziny przedmiotów i przeciwników dla danego motywu (`GardenThemeFactory`, `LibraryThemeFactory`, `VaultThemeFactory`) |
-| **Strategy** | Zachowania przeciwników (`IEnemyBehavior`) i strategie generowania map (`IMapStrategy`) |
-| **Decorator** | Modyfikatory broni (`StrongDecorator`, `UnluckyDecorator`) |
-| **Visitor** | Rodzaje ataku, które różnie działają na różne typy broni (`ICombatVisitor`) |
-| **Command** | Każda akcja gracza i operacja w menu to osobna komenda (`ICommand`, `IMenuCommand`) |
-| **Chain of Responsibility** | Łańcuch obsługi klawiszy: menu, ruch, akcje (`IInputHandler.SetNext`) |
-| **Observer** | Zdarzenia dźwięku i gatunków, na które reagują przeciwnicy (`SoundPublisher`, `SpeciesPublisher`) |
-| **Singleton** | Globalny dziennik zdarzeń (`GameLog`) |
-| **Composite** | Panele interfejsu składane w kolumny (`VerticalStackPanel`, `IRenderable`) |
-| **DTO + Mapper** | Serializacja stanu gry do przesłania przez sieć (`GameStateMapper`, `*Dto`) |
+| **Builder + Director** | Step-by-step map construction (`StandardMapBuilder`, `MapDirector`, `ThemeDungeonDirector`) |
+| **Abstract Factory** | Families of items and enemies for a given theme (`GardenThemeFactory`, `LibraryThemeFactory`, `VaultThemeFactory`) |
+| **Strategy** | Enemy behaviors (`IEnemyBehavior`) and map generation strategies (`IMapStrategy`) |
+| **Decorator** | Weapon modifiers (`StrongDecorator`, `UnluckyDecorator`) |
+| **Visitor** | Attack types that act differently on different weapon types (`ICombatVisitor`) |
+| **Command** | Every player action and menu operation is a separate command (`ICommand`, `IMenuCommand`) |
+| **Chain of Responsibility** | Key handling chain: menu, movement, actions (`IInputHandler.SetNext`) |
+| **Observer** | Sound and species events that enemies react to (`SoundPublisher`, `SpeciesPublisher`) |
+| **Singleton** | Global event log (`GameLog`) |
+| **Composite** | UI panels stacked into columns (`VerticalStackPanel`, `IRenderable`) |
+| **DTO + Mapper** | Serializing game state for network transfer (`GameStateMapper`, `*Dto`) |
 
-## Uruchomienie
+## Running
 
-Wymagany jest [.NET 8 SDK](https://dotnet.microsoft.com/download).
+Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download).
 
 ```bash
 dotnet run
 ```
 
-Po starcie program pyta o tryb: **(S)erwer**, **(K)lient** albo **(L)okalnie**. Tryb można też podać w argumentach:
+On startup the program asks for a mode: **(S)erver**, **(K)lient** or **(L)ocal**. You can also pass the mode as an argument:
 
 ```bash
-# serwer (domyślnie port 5555)
+# server (default port 5555)
 dotnet run -- --server 5555
 
-# klient
+# client
 dotnet run -- --client 127.0.0.1:5555
 ```
 
-Ustawienia trybu lokalnego (imię gracza, ścieżka logów) znajdują się w pliku `config.json`.
+Local mode settings (player name, log path) are in `config.json`.
 
-## Sterowanie
+## Controls
 
-| Klawisz | Akcja |
+| Key | Action |
 |---|---|
-| `W` `A` `S` `D` | Ruch |
-| `E` | Przedmioty na ziemi |
-| `B` | Plecak |
-| `J` | Dziennik zdarzeń |
-| `↑` `↓` | Wybór w menu |
-| `Enter` | Podnieś przedmiot |
-| `L` / `R` | Załóż do lewej / prawej ręki |
-| `1` / `2` | Zdejmij z lewej / prawej ręki |
-| `D` (w menu) | Upuść przedmiot |
-| `1` `2` `3` (w walce) | Atak zwykły / z ukrycia / magiczny |
-| `Esc` | Zamknij menu |
+| `W` `A` `S` `D` | Move |
+| `E` | Items on the ground |
+| `B` | Backpack |
+| `J` | Event log |
+| `↑` `↓` | Menu selection |
+| `Enter` | Pick up item |
+| `L` / `R` | Equip in left / right hand |
+| `1` / `2` | Unequip left / right hand |
+| `D` (in menu) | Drop item |
+| `1` `2` `3` (in combat) | Normal / stealth / magic attack |
+| `Esc` | Close menu |
 
-## Technologie
+## Tech stack
 
 - C# / .NET 8
 - `System.Net.Sockets` (TCP), `System.Text.Json`
-- [Pastel](https://github.com/silkfire/Pastel) do kolorowania tekstu w konsoli
+- [Pastel](https://github.com/silkfire/Pastel) for colored console output
